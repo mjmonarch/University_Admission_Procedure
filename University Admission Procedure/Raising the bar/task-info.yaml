@@ -78,9 +78,9 @@ files:
     if __name__ == '__main__':
         TestAdmissionProcedure().run_tests()
   learner_created: false
-feedback_link: https://hyperskill.org/projects/163/stages/845/implement#comment
+feedback_link: https://hyperskill.org/learn/step/12319#comment
 status: Solved
 feedback:
   message: Congratulations!
   time: Sat, 05 Mar 2022 19:39:34 UTC
-record: -1
+record: 2
