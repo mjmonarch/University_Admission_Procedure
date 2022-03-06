@@ -11,14 +11,46 @@
 #     "We regret to inform you that we will not be able to offer you admission.")
 
 # -----------------------------------------------STAGE 3-----------------------------------------------
-NUM_APPLICANTS = int(input())
-NUM_PLACES = int(input())
+# NUM_APPLICANTS = int(input())
+# NUM_PLACES = int(input())
+#
+# applicants = list(map(lambda x: input().split(), range(NUM_APPLICANTS)))
+# applicants = list(map(lambda x: [x[0], x[1], float(x[2])], applicants))
+# applicants.sort(key=lambda x: (-x[2], x[0], x[1]))
+#
+# applicants_output = [f"{x[0]} {x[1]}" for x in applicants[0:NUM_PLACES]]
+# print("Successful applicants:")
+# output_str = '\n'.join(applicants_output)
+# print(output_str)
 
-applicants = list(map(lambda x: input().split(), range(NUM_APPLICANTS)))
-applicants = list(map(lambda x: [x[0], x[1], float(x[2])], applicants))
-applicants.sort(key=lambda x: (-x[2], x[0], x[1]))
+# -----------------------------------------------STAGE 4-----------------------------------------------
+DEPARTMENTS_LIST = ['Biotech', 'Chemistry', 'Engineering', 'Mathematics', 'Physics']
+departments_enrollment = {i: [] for i in DEPARTMENTS_LIST}
 
-applicants_output = [f"{x[0]} {x[1]}" for x in applicants[0:NUM_PLACES]]
-print("Successful applicants:")
-output_str = '\n'.join(applicants_output)
-print(output_str)
+with open('applicants.txt', 'r', encoding='utf-8') as reader:
+    applicants_str = reader.read()
+all_applicants_list = applicants_str.split('\n')
+all_applicants_list = list(map(lambda x: x.split(), all_applicants_list))
+all_applicants_list = list(map(lambda x: [x[0], x[1], float(x[2]), x[3], x[4], x[5]], all_applicants_list))
+all_applicants_dict = {(i[0], i[1], i[2]): [i[3], i[4], i[5]] for i in all_applicants_list}
+
+N = int(input())
+
+for i in range(3):
+    applicants = {}
+    for department in departments_enrollment.keys():
+        applicants[department] = [x for x, y in all_applicants_dict.items() if y[i] == department]
+        applicants[department].sort(key=lambda x: (-x[2], x[0], x[1]))
+        applicants_can_accept = N - len(departments_enrollment[department])
+        if applicants_can_accept > 0:
+            applicants_to_accept_list = applicants[department][0:applicants_can_accept]
+            departments_enrollment[department].extend(applicants_to_accept_list)
+            for applicant in applicants_to_accept_list:
+                all_applicants_dict.__delitem__(applicant)
+
+for department, students in departments_enrollment.items():
+    print(department)
+    students.sort(key=lambda x: (-x[2], x[0], x[1]))
+    for student in students:
+        print(*student)
+    print()
