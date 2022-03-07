@@ -92,35 +92,34 @@
 #     print()
 
 
-# -----------------------------------------------STAGE 6-----------------------------------------------
+# -----------------------------------------------STAGE 6-7-----------------------------------------------
 DEPARTMENTS_LIST = ['Biotech', 'Chemistry', 'Engineering', 'Mathematics', 'Physics']
 departments_enrollment = {i: [] for i in DEPARTMENTS_LIST}
-DEPARTMENTS_EXAMS_NUM = {'Biotech': 2, 'Chemistry': 3, 'Engineering': 4, 'Mathematics': 5, 'Physics': 6}
+DEPARTMENTS_EXAMS_NUM = {'Biotech': 0, 'Chemistry': 1, 'Engineering': 2, 'Mathematics': 3, 'Physics': 4, 'Special': 5}
 
 with open('applicants.txt', 'r', encoding='utf-8') as reader:
     applicants_str = reader.read()
 all_applicants_list = applicants_str.split('\n')
 all_applicants_list = list(map(lambda x: x.split(), all_applicants_list))
-all_applicants_list = list(map(lambda x: [x[0], x[1], float(x[2]), float(x[3]), float(x[4]), float(x[5]),
-                                          x[6], x[7], x[8]], all_applicants_list))
-all_applicants_dict = {(i[0], i[1], (i[2] + i[3]) / 2, i[3], (i[4] + i[5]) / 2, i[4], (i[2] + i[4]) / 2):
-                           [i[6], i[7], i[8]] for i in all_applicants_list}
+all_applicants_list = list(map(lambda x: [x[0], x[1], float(x[2]), float(x[3]), float(x[4]), float(x[5]), float(x[6]),
+                                          x[7], x[8], x[9]], all_applicants_list))
+all_applicants_dict = {(i[0], i[1]): [(i[2] + i[3]) / 2, i[3], (i[4] + i[5]) / 2, i[4], (i[2] + i[4]) / 2, i[6],
+                           i[7], i[8], i[9]] for i in all_applicants_list}
 
 N = int(input())
 
 for i in range(3):
     applicants = {}
     for department in departments_enrollment.keys():
-        applicants[department] = [x for x, y in all_applicants_dict.items() if y[i] == department]
-        applicants[department].sort(key=lambda x: (-x[DEPARTMENTS_EXAMS_NUM[department]], x[0], x[1]))
+        applicants[department] = [[x[0], x[1], max(y[DEPARTMENTS_EXAMS_NUM[department]], y[5])]
+                                  for x, y in all_applicants_dict.items() if y[6 + i] == department]
+        applicants[department].sort(key=lambda x: (-x[2], x[0], x[1]))
         applicants_can_accept = N - len(departments_enrollment[department])
         if applicants_can_accept > 0:
             applicants_to_accept_list = applicants[department][0:applicants_can_accept]
-            applicants_to_accept_list_short = list(map(lambda x: (x[0], x[1], x[DEPARTMENTS_EXAMS_NUM[department]]),
-                                                       applicants_to_accept_list))
-            departments_enrollment[department].extend(applicants_to_accept_list_short)
+            departments_enrollment[department].extend(applicants_to_accept_list)
             for applicant in applicants_to_accept_list:
-                all_applicants_dict.__delitem__(applicant)
+                all_applicants_dict.__delitem__((applicant[0], applicant[1]))
 
 for department, students in departments_enrollment.items():
     with open(f"{department}.txt", 'w', encoding='utf-8') as writer:

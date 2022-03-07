@@ -445,16 +445,10 @@ files:
     Loura Macansh 3.01 Engineering Physics Mathematics
     Nastassja Trustram 3.77 Mathematics Engineering Physics
   learner_created: true
-- name: applicants.txt
-  visible: true
-  learner_created: true
 - name: physics.txt
   visible: true
   learner_created: true
 - name: mathematics.txt
-  visible: true
-  learner_created: true
-- name: chemistry.txt
   visible: true
   learner_created: true
 - name: engineering.txt
@@ -468,4 +462,4 @@ status: Solved
 feedback:
   message: Congratulations!
   time: Sun, 06 Mar 2022 22:00:49 UTC
-record: -1
+record: 6
